@@ -1,17 +1,23 @@
 package com.utn.pronostico;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Ronda {
 	
 	private int numero;
 	private List<Partido> arrayDePartidos;
+	public static final int partidosPorRonda = 2;
 	
-	
-	public Ronda(int numero, ArrayList<Partido> arrayDePartidos) {
+	//Constructor
+	public Ronda(int numero, List<Partido> arrayDePartidos) {
 		this.numero = numero;
-		this.arrayDePartidos = new ArrayList<Partido>();
+		this.arrayDePartidos = arrayDePartidos;
+	}
+	//Constructo default
+	public Ronda() {}
+	//toString
+	public String toString() {
+		return " Ronda numero: " + this.numero +" "+ this.arrayDePartidos + "\n";
 	}
 	public int getNumero() {
 		return numero;

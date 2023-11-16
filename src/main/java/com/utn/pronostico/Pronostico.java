@@ -1,17 +1,20 @@
 package com.utn.pronostico;
 
-public class Pronostico {
 
-	private Partido partido;
+public class Pronostico {
 	private Equipo equipo;
 	private ResultadoEnum resultado;
 	
-	public Pronostico(Partido partido, Equipo equipo, ResultadoEnum resultado) {
-		this.partido = partido;
+	public Pronostico(Equipo equipo, ResultadoEnum resultado) {
 		this.equipo = equipo;
 		this.resultado = resultado;
 	}
+	public Pronostico() {}
+	public String toString() {
+		return this.equipo +": " + this.resultado;
+	}
 	
+	//tal vez este metodo no vaya aca
 	public int puntos() {
 		if(resultado == ResultadoEnum.ganador) {
 			return 1;
@@ -20,13 +23,6 @@ public class Pronostico {
 			return -1;
 		}
 		return 0;
-	}
-	public Partido getPartido() {
-		return partido;
-	}
-	
-	public void setPartido(Partido partido) {
-		this.partido = partido;
 	}
 	
 	public Equipo getEquipo() {
