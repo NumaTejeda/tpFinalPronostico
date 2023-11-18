@@ -1,4 +1,4 @@
-package com.utn.pronostico;
+package com.utn.models;
 
 public enum ResultadoEnum {
 	ganador,

@@ -1,4 +1,4 @@
-package com.utn.pronostico;
+package com.utn.models;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ public class Ronda {
 	
 	private int numero;
 	private List<Partido> arrayDePartidos;
-	public static final int partidosPorRonda = 2;
+	public static final int PARTIDOS_POR_RONDA = 2;
 	
 	//Constructor
 	public Ronda(int numero, List<Partido> arrayDePartidos) {
@@ -17,7 +17,7 @@ public class Ronda {
 	public Ronda() {}
 	//toString
 	public String toString() {
-		return " Ronda numero: " + this.numero +" "+ this.arrayDePartidos + "\n";
+		return " Ronda numero: " +" ("+this.numero +") "+ this.arrayDePartidos + "\n";
 	}
 	public int getNumero() {
 		return numero;

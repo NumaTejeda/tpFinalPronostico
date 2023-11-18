@@ -1,4 +1,4 @@
-package com.utn.pronostico;
+package com.utn.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

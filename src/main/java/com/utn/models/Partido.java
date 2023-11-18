@@ -1,4 +1,4 @@
-package com.utn.pronostico;
+package com.utn.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,8 +10,10 @@ public class Partido {
 	private int golesEquipo1;
 	private int golesEquipo2;
 	private ResultadoEnum resultadoEquipo1;
+	private int numeroRonda;
 	
-	public Partido(Equipo equipo1, Equipo equipo2, int golesEquipo1, int golesEquipo2, ResultadoEnum resultadoEquipo1) {
+	public Partido(int numeroRonda,Equipo equipo1, Equipo equipo2, int golesEquipo1, int golesEquipo2, ResultadoEnum resultadoEquipo1) {
+		this.numeroRonda = numeroRonda;
 		this.equipo1 = equipo1;
 		this.equipo2 = equipo2;
 		this.golesEquipo1 = golesEquipo1;
@@ -22,7 +24,7 @@ public class Partido {
 	public String toString() {
 		return this.equipo1.getNombre() + ": "+ this.getGolesEquipo1()
 					+ " " +this.equipo2.getNombre() + ": " + this.getGolesEquipo2() + " \n"
-					+ "Resutlado: " + this.equipo1 + " " + this.resultadoEquipo1;
+					+ "Resultado: " + this.equipo1 + " " + this.resultadoEquipo1 + " \n";
 	}
 	public ResultadoEnum setResultado(Partido partido) {
 		if(partido.getGolesEquipo1() > partido.getGolesEquipo2()) {
@@ -43,5 +45,11 @@ public class Partido {
 	}
 	public ResultadoEnum getResutladoEquipo1(){
 		return resultadoEquipo1;
+	}
+	public int getNumeroRonda() {
+		return numeroRonda;
+	}
+	public void setNumeroRonda(int numeroRonda) {
+		this.numeroRonda = numeroRonda;
 	}
 }
