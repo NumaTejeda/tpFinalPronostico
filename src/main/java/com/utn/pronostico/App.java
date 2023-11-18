@@ -3,20 +3,19 @@ package com.utn.pronostico;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+
 
 public class App 
 {
     public static void main( String[] args ) {
     	
-    	
-    	String rutaResutlados = "src\\main\\java\\com\\utn\\pronostico\\resultados.csv";
+    	String rutaResutlados = "src\\main\\resources\\resultados.csv";
     	List<Partido> resultadosPartidos = new ArrayList<Partido>();
     	List<Partido> listaPartidos = obtenerResultados(rutaResutlados, resultadosPartidos);
     	
-    	String rutaPronostico = "src\\main\\java\\com\\utn\\pronostico\\pronosticos.csv";
+    	String rutaPronostico = "src\\main\\resources\\pronosticos.csv";
     	List<Pronostico> resultadosPronosticos = new ArrayList<Pronostico>();
     	List<Pronostico> pronosticos = leerArchivoPronostico(rutaPronostico, resultadosPronosticos);
     	
@@ -82,7 +81,6 @@ public class App
     private static List<Ronda> crearRondas(List<Partido> partidos) {
     	
     	// Crear una lista de rondas con 2 partidos por ronda
-        //Ronda ronda = new Ronda();
     	List<Ronda> rondas = new ArrayList<>();
         int numeroDeRonda = 0;
         for(int i = 0; i < partidos.size(); i +=2) {
@@ -94,17 +92,6 @@ public class App
         	  
         	  numeroDeRonda++;
         }
-        System.out.println("Rondas obtenidas de List<Partido>: \n \n"+ rondas);
-        
-		/*if(partidos.size() <= 2) {
-			Ronda agregarRonda = new Ronda();
-			agregarRonda.setArrayDePartidos(partidos);
-			agregarRonda.setNumero(numeroRonda);
-			listaDeRondas.add(agregarRonda);
-			//System.out.println(agregarRonda);
-			numeroRonda++;
-			//partidos.clear();
-		}*/
 
     	return rondas;
     }
@@ -151,42 +138,36 @@ public class App
     	catch (Exception e) { 
     		e.printStackTrace(); 
     	}
-    	System.out.println("Pronosticos: " + resultadosPronosticos); 
     	return resultadosPronosticos;
     }
     
     private static void obtenerPuntaje(List<Ronda> rondas, List<Pronostico> pronosticos) {
+    	ArrayList<ResultadoEnum> resultadosEquipo1Enum = new ArrayList<>();
+    	ArrayList<ResultadoEnum> resultadoPronosticoEnum = new ArrayList<>();
     	
-    	for(int i = 0; i < rondas.size(); i++) {
-    		System.out.println(rondas.size());
-    		for(int j = 0; j < rondas.get(i).getArrayDePartidos().size(); j++ ) {
-    			System.out.println(rondas.get(i).getArrayDePartidos().get(j).getResutladoEquipo1() + "\n ---");
-    			System.out.println(pronosticos.get(j).getResultado() + "\n --");
+    	//Guardo los resutlados de los partidos de cada ronda en funcion del equipo1 en un Array type Enum
+    	for(Ronda ronda : rondas) {
+    		for(int i = 0; i < ronda.getArrayDePartidos().size(); i++) {
+    			resultadosEquipo1Enum.add(ronda.getArrayDePartidos().get(i).getResutladoEquipo1());
     		}
     	}
-    	
-    	
-    	
-    	/*for(int i = 0; i < rondas.size(); i++) {
-    		int count = 0;
-    		for(int j = 0; j < rondas.get(i).getArrayDePartidos().size(); j++) {
-    			
-    			if(rondas.get(i).getArrayDePartidos().get(j).getResutladoEquipo1() == pronosticos.get(count).getResultado()) {
-    				//System.out.println("De este array "+rondas.get(i).getArrayDePartidos()+" con este: " + pronosticos.get(i));
-    				System.out.println("Se compara: "+rondas.get(i).getArrayDePartidos().get(count).getResutladoEquipo1()
-    						+ " con: " + pronosticos.get(j).getResultado());
-    				System.out.println("+1");
-    				count++;
-    			}
-    			else{
-    				//System.out.println("De este array "+rondas.get(i).getArrayDePartidos()+" con este: " + pronosticos.get(i));
-    				System.out.println("Se compara: "+rondas.get(i).getArrayDePartidos().get(j).getResutladoEquipo1()
-    						+ " con: " + pronosticos.get(count).getResultado());
-    				System.out.println("-1");
-    				count++;
-    			}
+    	//Guardo los resultados obtenidos de los pronosticos en un Array type Enum
+    	for(Pronostico pronostico : pronosticos) {
+    		resultadoPronosticoEnum.add(pronostico.getResultado());
+    	}
+    	//Comparo los resultados
+    	int puntaje = 0;
+    	for(int i = 0; i < resultadoPronosticoEnum.size(); i++) {
+    		if(resultadoPronosticoEnum.get(i) == resultadosEquipo1Enum.get(i)) {
+    			puntaje += 1;
+    		}else if(resultadoPronosticoEnum.get(i) != resultadosEquipo1Enum.get(i)){
+    			puntaje -= 1;
+    		}else {
+    			System.out.println("0");
     		}
-    	}*/
+    	}
+    	System.out.println("El puntaje obtenido es: " + puntaje);
+
     }
 }
 
