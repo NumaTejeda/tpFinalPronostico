@@ -8,10 +8,12 @@ import lombok.Setter;
 public class Pronostico {
 	private Equipo equipo;
 	private ResultadoEnum resultado;
+	private String nameParticipante;
 	
-	public Pronostico(Equipo equipo, ResultadoEnum resultado) {
+	public Pronostico(Equipo equipo, ResultadoEnum resultado, String nameParticipante) {
 		this.equipo = equipo;
 		this.resultado = resultado;
+		this.setNameParticipante(nameParticipante);
 	}
 	public Pronostico() {}
 	public String toString() {
@@ -43,5 +45,11 @@ public class Pronostico {
 	
 	public void setResultado(ResultadoEnum resultado) {
 		this.resultado = resultado;
+	}
+	public String getNameParticipante() {
+		return nameParticipante;
+	}
+	public void setNameParticipante(String nameParticipante) {
+		this.nameParticipante = nameParticipante;
 	}
 }

@@ -2,7 +2,10 @@ package com.utn.models;
 
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
@@ -20,7 +23,9 @@ public class App
     	List<Pronostico> pronosticos = obtenerPronosticos(rutaPronostico, resultadosPronosticos);
     	
     	List<Ronda> rondas =  crearRondas(listaPartidos);
-    	obtenerPuntaje(rondas, pronosticos);
+    	//EL CODIGO ESTA COMENTADO PORQUE ARROJA ERROR, LA COMPARACION ENTRE RESUTLADOS PARA OBTENER PUNTAJE NO ANDA
+    	//obtenerPuntaje(rondas, pronosticos);
+    	System.out.println(obtenerParticipante(pronosticos));
     	
     }
     
@@ -66,7 +71,7 @@ public class App
     	catch (Exception e) { 
     		e.printStackTrace(); 
     	}
-    	System.out.println(resultadosPartidos);
+    	//System.out.println(resultadosPartidos);
 		return resultadosPartidos;
 	}
     
@@ -74,11 +79,10 @@ public class App
     	
     	// Crear una lista de rondas con 2 partidos por ronda
     	List<Ronda> rondas = new ArrayList<>();
+    	//Creo una SUBLISTA de List<Partido> pasada por parametro cada 2 partidos y creo una RONDA y agrego a RONDAS.
         for(int i = 0; i < partidos.size(); i += Ronda.PARTIDOS_POR_RONDA) {
         	  List<Partido> subList = new ArrayList<>(partidos.subList(i, i + Ronda.PARTIDOS_POR_RONDA));
-        	  //System.out.println("Sub Lista: "+subList);
         	  Ronda ronda2 = new Ronda(subList.get(0).getNumeroRonda(), subList);
-        	  //System.out.println(ronda2);
         	  rondas.add(ronda2);
         }
     	
@@ -96,18 +100,22 @@ public class App
     		// Creacion de objeto csvReader
     		// fileReader como parametro
     		CSVReader manejador = new CSVReaderBuilder(resultados).withSkipLines(1).build();; 
-    		String[] nextRecord; 
-    		//Creo lista de pronostico vacia
-    		
-    		
-    		// Leemos el archivo linea por linea
+    		String[] nextRecord;     		
+
+    		// Leo el archivo linea por linea
     		while ((nextRecord = manejador.readNext()) != null) { 
+    			//Guardo cada valor separado por comas
+    			String nameParticipante = nextRecord[0];
     			Equipo equipo1 = new Equipo(nextRecord[1]);
     			String gana = nextRecord[2];
     			String empata = nextRecord[3];
     			String pierde = nextRecord[4];
+    			//Creo un pronostico 
     			Pronostico pronostico = new Pronostico();
+    			//Agrego equipo y nombre de participante
     			pronostico.setEquipo(equipo1);
+    			pronostico.setNameParticipante(nameParticipante);
+    			//Mapeo las x y guardo el valor segun corresponda
     			if(gana.equals("x")) {
     				pronostico.setResultado(ResultadoEnum.ganador);
     				resultadosPronosticos.add(pronostico);
@@ -132,6 +140,7 @@ public class App
     }
     
     private static void obtenerPuntaje(List<Ronda> rondas, List<Pronostico> pronosticos) {
+
     	ArrayList<ResultadoEnum> resultadosEquipo1Enum = new ArrayList<>();
     	ArrayList<ResultadoEnum> resultadoPronosticoEnum = new ArrayList<>();
     	
@@ -159,6 +168,25 @@ public class App
     	System.out.println("El puntaje obtenido es: " + puntaje);
 
     }
+    
+    public static Map<String, List<Pronostico>> obtenerParticipante(List<Pronostico> resultadoPronosticos){
+    	//Creo un HashMap String <----(clave) y List<Pronostico> <---(valor) 
+    	Map<String, List<Pronostico>> pronosticosPorParticipante = new HashMap<>();
+
+        // Proceso los resultadoPronosticos y organizarlos por participante
+    	//Utilizo el metodo computeIfAbsent que toma el nombre como clave o key, y agrega los pronosticos
+    	//Si key (k) cambia la funcion que se pasa como segundo parametro crea un nuevo arraylist para
+    	// la nueva key (o sea nuevo participante) y crea un array y agrega los pronosticos de ese participante
+        for (Pronostico pronostico : resultadoPronosticos) {
+            String nombreParticipante = pronostico.getNameParticipante(); // tomo el nombre de participante
+            pronosticosPorParticipante
+                    .computeIfAbsent(nombreParticipante, k -> new ArrayList<>())
+                    .add(pronostico);
+        }
+    	
+    	return pronosticosPorParticipante;
+    }
+    
 }
 
 
