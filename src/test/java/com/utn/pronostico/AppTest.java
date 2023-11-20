@@ -1,38 +1,46 @@
 package com.utn.pronostico;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+import java.util.ArrayList;
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+import java.util.List;
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+import org.junit.jupiter.api.Test;
+
+import com.utn.models.App;
+import com.utn.models.Participante;
+import com.utn.models.Partido;
+import com.utn.models.Pronostico;
+import com.utn.models.Ronda;
+
+
+class AppTest{
+	
+	
+	String rutaResutlados = "src\\test\\resources\\resultadosTest.csv";
+	List<Partido> resultadosPartidos = new ArrayList<Partido>();
+	List<Partido> listaPartidos = App.obtenerResultados(rutaResutlados, resultadosPartidos);
+	
+	String rutaPronostico = "src\\test\\resources\\pronosticosTest.csv";
+	List<Pronostico> resultadosPronosticos = new ArrayList<Pronostico>();
+	List<Pronostico> pronosticos =  App.obtenerPronosticos(rutaPronostico, resultadosPronosticos);
+	
+	List<Ronda> rondas =  App.crearRondas(listaPartidos);
+	List<Participante> participantePrueba= App.obtenerPuntaje(rondas, App.obtenerParticipante(pronosticos));
+	
+	@Test
+    public void puntajeParticipante2RondasConsecutivas() {
+    	//Putos esperados
+		assertEquals(4, participantePrueba.get(0).getPuntaje());
+    	    	
     }
+	@Test
+	public void cantidadDePronosticosPorRondaEsperado() {
+		//Cantidad de pronosticos esperados por ronda
+		assertEquals(2, participantePrueba.get(0).getPronostico().size());
+	}
+
+    
+   
 }

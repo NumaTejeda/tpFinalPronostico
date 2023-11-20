@@ -1,0 +1,4 @@
+com\utn\models\Ronda.class
+com\utn\models\Partido.class
+com\utn\models\Equipo.class
+com\utn\models\ResultadoEnum.class

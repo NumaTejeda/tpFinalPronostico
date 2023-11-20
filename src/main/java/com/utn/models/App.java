@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
@@ -23,13 +24,11 @@ public class App
     	List<Pronostico> pronosticos = obtenerPronosticos(rutaPronostico, resultadosPronosticos);
     	
     	List<Ronda> rondas =  crearRondas(listaPartidos);
-    	//EL CODIGO ESTA COMENTADO PORQUE ARROJA ERROR, LA COMPARACION ENTRE RESUTLADOS PARA OBTENER PUNTAJE NO ANDA
-    	//obtenerPuntaje(rondas, pronosticos);
-    	System.out.println(obtenerParticipante(pronosticos));
+    	obtenerPuntaje(rondas, obtenerParticipante(pronosticos));
     	
     }
     
-    private static List<Partido> obtenerResultados(String rutaResutlados, List<Partido> resultadosPartidos){
+    public static List<Partido> obtenerResultados(String rutaResutlados, List<Partido> resultadosPartidos){
     	
     	try { 
     		// Creacion del objeto FileReader
@@ -75,7 +74,7 @@ public class App
 		return resultadosPartidos;
 	}
     
-    private static List<Ronda> crearRondas(List<Partido> partidos) {
+    public static List<Ronda> crearRondas(List<Partido> partidos) {
     	
     	// Crear una lista de rondas con 2 partidos por ronda
     	List<Ronda> rondas = new ArrayList<>();
@@ -90,7 +89,7 @@ public class App
     	return rondas;
     }
     
-    private static List<Pronostico> obtenerPronosticos(String rutaPronostico, List<Pronostico> resultadosPronosticos){
+    public static List<Pronostico> obtenerPronosticos(String rutaPronostico, List<Pronostico> resultadosPronosticos){
     	
     	try { 
     		// Creacion del objeto FileReader
@@ -138,44 +137,14 @@ public class App
     	}
     	return resultadosPronosticos;
     }
-    
-    private static void obtenerPuntaje(List<Ronda> rondas, List<Pronostico> pronosticos) {
-
-    	ArrayList<ResultadoEnum> resultadosEquipo1Enum = new ArrayList<>();
-    	ArrayList<ResultadoEnum> resultadoPronosticoEnum = new ArrayList<>();
-    	
-    	//Guardo los resutlados de los partidos de cada ronda en funcion del equipo1 en un Array type Enum
-    	for(Ronda ronda : rondas) {
-    		for(int i = 0; i < ronda.getArrayDePartidos().size(); i++) {
-    			resultadosEquipo1Enum.add(ronda.getArrayDePartidos().get(i).getResutladoEquipo1());
-    		}
-    	}
-    	//Guardo los resultados obtenidos de los pronosticos en un Array type Enum
-    	for(Pronostico pronostico : pronosticos) {
-    		resultadoPronosticoEnum.add(pronostico.getResultado());
-    	}
-    	//Comparo los resultados
-    	int puntaje = 0;
-    	for(int i = 0; i < resultadoPronosticoEnum.size(); i++) {
-    		if(resultadoPronosticoEnum.get(i) == resultadosEquipo1Enum.get(i)) {
-    			puntaje += 1;
-    		}else if(resultadoPronosticoEnum.get(i) != resultadosEquipo1Enum.get(i)){
-    			puntaje -= 1;
-    		}else {
-    			System.out.println("0");
-    		}
-    	}
-    	System.out.println("El puntaje obtenido es: " + puntaje);
-
-    }
-    
+        
     public static Map<String, List<Pronostico>> obtenerParticipante(List<Pronostico> resultadoPronosticos){
     	//Creo un HashMap String <----(clave) y List<Pronostico> <---(valor) 
     	Map<String, List<Pronostico>> pronosticosPorParticipante = new HashMap<>();
 
         // Proceso los resultadoPronosticos y organizarlos por participante
     	//Utilizo el metodo computeIfAbsent que toma el nombre como clave o key, y agrega los pronosticos
-    	//Si key (k) cambia la funcion que se pasa como segundo parametro crea un nuevo arraylist para
+    	//Si key (k) cambia, la funcion que se pasa como segundo parametro crea un nuevo arraylist para
     	// la nueva key (o sea nuevo participante) y crea un array y agrega los pronosticos de ese participante
         for (Pronostico pronostico : resultadoPronosticos) {
             String nombreParticipante = pronostico.getNameParticipante(); // tomo el nombre de participante
@@ -183,10 +152,45 @@ public class App
                     .computeIfAbsent(nombreParticipante, k -> new ArrayList<>())
                     .add(pronostico);
         }
-    	
+    	System.out.println(pronosticosPorParticipante);
     	return pronosticosPorParticipante;
     }
     
+    public static List<Participante> obtenerPuntaje(List<Ronda> rondas, Map<String, List<Pronostico>> pronosticosPorParticipante) {
+
+    	ArrayList<ResultadoEnum> resultados = new ArrayList<>();
+    	List<Participante> participantes = new ArrayList<>(); 
+    	
+    	//Guardo los resutlados de los partidos de cada ronda en funcion del equipo1 en un Array type Enum
+    	for(Ronda ronda : rondas) {
+    		for(int i = 0; i < ronda.getArrayDePartidos().size(); i++) {
+    			resultados.add(ronda.getArrayDePartidos().get(i).getResutladoEquipo1());
+    		}
+    	}
+    	// itero por las key creando participantes con sus respectivos pronosticos
+    	for (String participante : pronosticosPorParticipante.keySet()) {
+            
+            int puntajeObtenido = 0;
+            // Obtener la lista de pronósticos para el participante actual
+            List<Pronostico> pronosticos = pronosticosPorParticipante.get(participante);
+            Participante nuevoParticipante = new Participante(participante, pronosticos);
+            
+            // Realizar acciones con la lista de pronósticos si es necesario
+            for (int i = 0; i < pronosticos.size(); i++) {
+            	if(pronosticos.get(i).getResultado() == resultados.get(i)) {
+            	   puntajeObtenido++;
+            	}
+            }
+            //Por el momento la cantidad de pronosticos es igual a la cantidad de puntaje obtenido
+            nuevoParticipante.setPronosticosAcertados(puntajeObtenido);
+            nuevoParticipante.setPuntaje(puntajeObtenido);
+            participantes.add(nuevoParticipante);
+        }
+    	for(Participante participante : participantes) {
+    		System.out.println(participante);
+    	}
+    	return participantes;
+    }
 }
 
 

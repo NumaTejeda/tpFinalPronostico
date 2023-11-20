@@ -1,9 +1,13 @@
 Equipo 1,Gana 1,Empata,Gana 2,Equipo 2
-Numa,Argentina,,x,,Alemania
+Numa,Argentina,x,,,Alemania
 Numa,Brasil,x,,,Holanda
-Numa,Holanda,,x,,Alemania
-Numa,Argentina,,x,,Brasil
+Numa,Holanda,,,x,Alemania
+Numa,Argentina,x,,,Brasil
 Juli,Argentina,,x,,Alemania
-Juli,Brasil,x,,,Holanda
-Juli,Holanda,,x,,Alemania
-Juli,Argentina,,x,,Brasil
+Juli,Brasil,,,x,Holanda
+Juli,Holanda,,,x,Alemania
+Juli,Argentina,x,,,Brasil
+Leon,Argentina,,,x,Alemania
+Leon,Brasil,,x,,Holanda
+Leon,Holanda,x,,,Alemania
+Leon,Argentina,x,,,Brasil
