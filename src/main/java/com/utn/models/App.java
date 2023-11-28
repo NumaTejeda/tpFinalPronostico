@@ -24,7 +24,11 @@ public class App
     	List<Pronostico> pronosticos = obtenerPronosticos(rutaPronostico, resultadosPronosticos);
     	
     	List<Ronda> rondas =  crearRondas(listaPartidos);
-    	obtenerPuntaje(rondas, obtenerParticipante(pronosticos));
+    	List<Participante> participantes =  obtenerPuntaje(rondas, obtenerParticipante(pronosticos));
+    	
+    	for(Participante participante : participantes) {
+    		System.out.println(participante);
+    	}
     	
     }
     
@@ -44,33 +48,40 @@ public class App
     		
     		// Leemos el archivo linea por linea
     		while ((linea = manejador.readNext()) != null) { 
-    			//Obtengo numero ronda para cada partido
-    			int numeroRonda = Integer.parseInt(linea[0]);
-    			//Creo los equipos por linea
-    			Equipo equipo1 = new Equipo(linea[1]);
-				Equipo equipo2 = new Equipo(linea[4]);
-				// Agrego los goles por equipo 
-				int goles1 = Integer.parseInt(linea[2]);
-				int goles2 = Integer.parseInt(linea[3]);
-				//Creo un partido con los resultado obtenidos
-				if(goles1 > goles2) {
-					Partido partido = new Partido(numeroRonda,equipo1, equipo2, goles1, goles2, ResultadoEnum.ganador);
-					resultadosPartidos.add(partido);
-				}else if(goles1 < goles2){
-					Partido partido = new Partido(numeroRonda,equipo1, equipo2, goles1, goles2, ResultadoEnum.perdedor);
-					resultadosPartidos.add(partido);
-				}else {
-					Partido partido = new Partido(numeroRonda,equipo1,equipo2, goles1, goles2, ResultadoEnum.empate);
-					resultadosPartidos.add(partido);
-				}
+    			
+    			if(linea.length == 5) {
+    				//Obtengo numero ronda para cada partido
+    				int numeroRonda = Integer.parseInt(linea[0]);
+    				//Creo los equipos por linea
+    				Equipo equipo1 = new Equipo(linea[1]);
+    				Equipo equipo2 = new Equipo(linea[4]);
+    				// Agrego los goles por equipo 
+    				int goles1 = Integer.parseInt(linea[2]);
+    				int goles2 = Integer.parseInt(linea[3]);
+    				//Creo un partido con los resultado obtenidos
+    				if(goles1 > goles2) {
+    					Partido partido = new Partido(numeroRonda,equipo1, equipo2, goles1, goles2, ResultadoEnum.ganador);
+    					resultadosPartidos.add(partido);
+    				}else if(goles1 < goles2){
+    					Partido partido = new Partido(numeroRonda,equipo1, equipo2, goles1, goles2, ResultadoEnum.perdedor);
+    					resultadosPartidos.add(partido);
+    				}else {
+    					Partido partido = new Partido(numeroRonda,equipo1,equipo2, goles1, goles2, ResultadoEnum.empate);
+    					resultadosPartidos.add(partido);
+    				}
+    				
+    			}
 				
     		} 
     		manejador.close();
     	} 
+    	catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
     	catch (Exception e) { 
     		e.printStackTrace(); 
     	}
-    	//System.out.println(resultadosPartidos);
+    	System.out.println(resultadosPartidos);
 		return resultadosPartidos;
 	}
     
@@ -84,6 +95,13 @@ public class App
         	  Ronda ronda2 = new Ronda(subList.get(0).getNumeroRonda(), subList);
         	  rondas.add(ronda2);
         }
+    	/*for(Partido partido : partidos) {
+    		partido.ge
+    	}*/
+    	
+    	/* pronosticosPorParticipante
+                    .computeIfAbsent(nombreParticipante, k -> new ArrayList<>())
+                    .add(pronostico);*/
     	
         System.out.println(rondas);
     	return rondas;
@@ -152,7 +170,7 @@ public class App
                     .computeIfAbsent(nombreParticipante, k -> new ArrayList<>())
                     .add(pronostico);
         }
-    	System.out.println(pronosticosPorParticipante);
+    	System.out.println(pronosticosPorParticipante + "Aqui");
     	return pronosticosPorParticipante;
     }
     
@@ -186,9 +204,9 @@ public class App
             nuevoParticipante.setPuntaje(puntajeObtenido);
             participantes.add(nuevoParticipante);
         }
-    	for(Participante participante : participantes) {
+    	/*for(Participante participante : participantes) {
     		System.out.println(participante);
-    	}
+    	}*/
     	return participantes;
     }
 }

@@ -36,9 +36,9 @@ class AppTest{
     	    	
     }
 	@Test
-	public void cantidadDePronosticosPorRondaEsperado() {
-		//Cantidad de pronosticos esperados por ronda
-		assertEquals(2, participantePrueba.get(0).getPronostico().size());
+	public void cantidadDePartidosPorRondaEsperado() {
+		//Cantidad de partidos esperados por ronda
+		assertEquals(2, rondas.get(0).getArrayDePartidos().size());
 	}
 
     
